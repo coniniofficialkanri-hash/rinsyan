@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RINSHAN | チャイニーズカフェ&バー 嶺上 — 熊本・銀座通り</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #090909;
+  --deep: #111118;
+  --gold: #C9A96E;
+  --gold-light: #E8D5A8;
+  --gold-dim: #7A6340;
+  --red: #B83A2A;
+  --white: #F7F2EA;
+  --gray: #888882;
+  --line: rgba(201,169,110,0.18);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+/* ===== HEADER ===== */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 20px 28px;
+  display: flex; justify-content: space-between; align-items: center;
+  background: linear-gradient(to bottom, rgba(9,9,9,0.95) 0%, transparent 100%);
+  transition: background 0.4s;
+}
+header.scrolled { background: rgba(9,9,9,0.97); border-bottom: 1px solid var(--line); }
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px; font-weight: 400; letter-spacing: 0.18em;
+  color: var(--gold);
+}
+.logo span { font-size: 10px; letter-spacing: 0.22em; display: block; color: var(--gold-dim); margin-top: 2px; font-family: 'Zen Kaku Gothic New', sans-serif; font-weight: 300; }
+nav { display: flex; gap: 28px; align-items: center; }
+nav a { font-size: 11px; letter-spacing: 0.2em; color: var(--gray); transition: color 0.2s; }
+nav a:hover { color: var(--gold); }
+nav a.active { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 2px; }
+.nav-reserve {
+  font-size: 11px; letter-spacing: 0.18em;
+  padding: 9px 22px; border: 1px solid var(--gold);
+  color: var(--gold); transition: all 0.2s;
+}
+.nav-reserve:hover { background: var(--gold); color: var(--black); }
+.ham { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+.ham span { width: 22px; height: 1px; background: var(--gold); transition: all 0.3s; }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; height: 100svh; min-height: 600px;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background-image: url('img-hero.png');
+  background-size: cover; background-position: center;
+  transform: scale(1.08);
+  transition: transform 8s ease;
+  filter: brightness(0.55);
+}
+.hero-bg.loaded { transform: scale(1.0); }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom,
+    rgba(9,9,9,0.1) 0%,
+    transparent 30%,
+    rgba(9,9,9,0.4) 55%,
+    rgba(9,9,9,0.92) 100%
+  );
+}
+.hero-deco {
+  position: absolute; pointer-events: none; overflow: visible;
+}
+.hero-content {
+  position: relative; z-index: 2;
+  padding: 0 28px 60px;
+  width: 100%;
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 10px; letter-spacing: 0.3em;
+  color: var(--gold); border: 1px solid var(--gold-dim);
+  padding: 5px 14px; margin-bottom: 20px;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+.hero-tag.show { opacity: 1; transform: none; }
+.hero-catch {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(32px, 8vw, 56px);
+  font-weight: 600; line-height: 1.35;
+  letter-spacing: 0.04em;
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.8s 0.2s, transform 0.8s 0.2s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-catch.show { opacity: 1; transform: none; }
+.hero-catch em {
+  font-style: normal; color: var(--gold);
+}
+.hero-sub {
+  font-size: 13px; letter-spacing: 0.14em; line-height: 1.8;
+  color: rgba(247,242,234,0.7); margin-top: 16px;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s 0.5s, transform 0.8s 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-sub.show { opacity: 1; transform: none; }
+.hero-cta {
+  margin-top: 32px;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.7s 0.8s, transform 0.7s 0.8s;
+}
+.hero-cta.show { opacity: 1; transform: none; }
+.btn-primary {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 13px; font-weight: 500;
+  letter-spacing: 0.2em;
+  padding: 16px 36px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,169,110,0.3); }
+.btn-primary:active { transform: scale(0.97); }
+.hero-scroll {
+  position: absolute; bottom: 28px; right: 28px; z-index: 2;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 10px; letter-spacing: 0.3em; color: var(--gold-dim);
+  opacity: 0; transition: opacity 1s 1.4s;
+  writing-mode: vertical-rl;
+}
+.hero-scroll.show { opacity: 1; }
+.scroll-line { width: 1px; height: 48px; background: var(--gold-dim); transform-origin: top; animation: scrollLine 1.8s ease-in-out infinite; }
+@keyframes scrollLine {
+  0%,100% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ===== ANIM ===== */
+.anim {
+  opacity: 0;
+  transition: opacity 1.1s, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.anim.fade-up { transform: translateY(52px); }
+.anim.fade-left { transform: translateX(-44px); }
+.anim.fade-scale { transform: scale(0.92); }
+.anim.visible { opacity: 1; transform: none !important; }
+
+/* ===== SECTION COMMON ===== */
+section { padding: 100px 0; }
+.section-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px; letter-spacing: 0.35em;
+  color: var(--gold); text-transform: uppercase;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 16px;
+}
+.section-label::before {
+  content: ''; width: 32px; height: 1px; background: var(--gold);
+}
+.section-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(26px, 5vw, 40px);
+  font-weight: 600; line-height: 1.4;
+  letter-spacing: 0.04em;
+}
+
+/* ===== CONCEPT ===== */
+.concept {
+  background: var(--deep);
+  position: relative; overflow: hidden;
+}
+.concept-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.concept-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 160px; font-weight: 300; line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(201,169,110,0.15);
+  position: absolute; left: -20px; top: 40px;
+  pointer-events: none;
+}
+.concept-text { position: relative; z-index: 1; }
+.concept-body {
+  font-size: 14px; line-height: 2.1; color: rgba(247,242,234,0.7);
+  margin-top: 24px;
+}
+.concept-img {
+  position: relative;
+}
+.concept-img img {
+  width: 100%; height: 340px; object-fit: cover;
+}
+.concept-img::before {
+  content: '';
+  position: absolute; inset: -8px 8px 8px -8px;
+  border: 1px solid var(--line);
+  z-index: -1;
+}
+
+
+
+/* ===== FEATURES ===== */
+.features {
+  background: var(--deep);
+}
+.features-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+}
+.features-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--line);
+  margin-top: 56px;
+}
+.feature-item {
+  background: var(--deep);
+  padding: 0; overflow: hidden;
+}
+.feature-img { width: 100%; height: 200px; object-fit: cover; filter: brightness(0.8); transition: filter 0.4s, transform 0.5s; }
+.feature-item:hover .feature-img { filter: brightness(1); transform: scale(1.04); }
+.feature-img-wrap { overflow: hidden; }
+.feature-body { padding: 28px 24px; }
+.feature-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; letter-spacing: 0.3em; color: var(--gold-dim);
+  margin-bottom: 10px;
+}
+.feature-ttl {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 17px; font-weight: 600; line-height: 1.5;
+  margin-bottom: 12px;
+}
+.feature-desc { font-size: 13px; line-height: 1.9; color: rgba(247,242,234,0.65); }
+
+/* ===== MENU ===== */
+.menu-section {
+  background: var(--black);
+  position: relative;
+}
+.menu-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+}
+.menu-head { margin-bottom: 52px; }
+.menu-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2px; background: var(--line);
+}
+.menu-item {
+  background: var(--black);
+  display: flex; gap: 0; overflow: hidden;
+  transition: background 0.3s;
+}
+.menu-item:hover { background: #111; }
+.menu-item-img {
+  width: 120px; flex-shrink: 0; height: 110px;
+  object-fit: cover;
+  filter: brightness(0.85); transition: filter 0.3s;
+}
+.menu-item:hover .menu-item-img { filter: brightness(1); }
+.menu-item-body {
+  padding: 20px 20px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.menu-item-name {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px; font-weight: 600; line-height: 1.4;
+  margin-bottom: 6px;
+}
+.menu-item-desc { font-size: 11px; line-height: 1.7; color: var(--gray); }
+.menu-item-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; color: var(--gold);
+  margin-top: 8px; letter-spacing: 0.04em;
+}
+.menu-more {
+  text-align: center; margin-top: 44px;
+}
+.btn-outline {
+  display: inline-block;
+  border: 1px solid var(--gold);
+  color: var(--gold); font-size: 12px; letter-spacing: 0.22em;
+  padding: 14px 40px;
+  transition: all 0.2s;
+}
+.btn-outline:hover { background: var(--gold); color: var(--black); }
+
+/* ===== COURSE ===== */
+.course-section {
+  position: relative; overflow: hidden;
+}
+.course-bg {
+  position: absolute; inset: 0;
+  background-image: url('img-dining.png');
+  background-size: cover; background-position: center;
+  filter: brightness(0.25);
+}
+.course-inner {
+  position: relative; z-index: 2;
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+}
+.course-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; margin-top: 52px;
+}
+.course-card {
+  border: 1px solid var(--line);
+  background: rgba(9,9,9,0.6);
+  backdrop-filter: blur(4px);
+  padding: 36px 28px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.course-card:hover { border-color: var(--gold); background: rgba(201,169,110,0.05); }
+.course-card-label {
+  font-size: 10px; letter-spacing: 0.3em; color: var(--gold);
+  margin-bottom: 14px;
+}
+.course-card-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 17px; font-weight: 600; line-height: 1.5;
+  margin-bottom: 16px;
+}
+.course-card-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px; font-weight: 300; color: var(--gold);
+  line-height: 1;
+}
+.course-card-price span { font-size: 16px; margin-left: 4px; color: var(--gold-dim); }
+.course-card-desc {
+  font-size: 12px; line-height: 1.9; color: var(--gray);
+  margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px;
+}
+
+/* ===== SPACE ===== */
+.space-section {
+  background: var(--deep);
+}
+.space-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+}
+.space-gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 220px 220px;
+  gap: 2px; margin-top: 52px;
+}
+.space-img {
+  overflow: hidden; background: #1a1a1a;
+}
+.space-img:first-child { grid-row: 1 / 3; }
+.space-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.8);
+  transition: filter 0.5s, transform 0.6s;
+}
+.space-img:hover img { filter: brightness(1); transform: scale(1.05); }
+
+/* ===== ACCESS ===== */
+.access-section {
+  background: var(--black);
+}
+.access-inner {
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+}
+.access-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; margin-top: 52px;
+}
+.info-table { width: 100%; border-collapse: collapse; }
+.info-table tr { border-bottom: 1px solid var(--line); }
+.info-table td {
+  padding: 16px 0;
+  font-size: 13px; line-height: 1.8;
+}
+.info-table td:first-child {
+  width: 90px; font-size: 11px; letter-spacing: 0.15em; color: var(--gold-dim);
+  vertical-align: top; padding-top: 18px;
+}
+.info-table td:last-child { color: rgba(247,242,234,0.85); }
+.map-wrap {
+  border: 1px solid var(--line);
+  overflow: hidden;
+  position: relative;
+}
+.map-wrap iframe {
+  width: 100%; height: 380px; display: block;
+  filter: grayscale(80%) brightness(0.7);
+}
+
+/* ===== CTA ===== */
+.cta-section {
+  position: relative; overflow: hidden;
+  padding: 120px 0;
+}
+.cta-bg {
+  position: absolute; inset: 0;
+  background-image: url('img-night.png');
+  background-size: cover; background-position: center;
+  filter: brightness(0.18);
+  transition: transform 8s ease;
+}
+.cta-section:hover .cta-bg { transform: scale(1.04); }
+.cta-inner {
+  position: relative; z-index: 2;
+  max-width: 960px; margin: 0 auto; padding: 0 28px;
+  text-align: center;
+}
+.cta-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; letter-spacing: 0.35em; color: var(--gold);
+  margin-bottom: 24px;
+}
+.cta-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: clamp(24px, 5vw, 38px); font-weight: 600;
+  line-height: 1.5; margin-bottom: 36px;
+}
+.cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: #050505;
+  border-top: 1px solid var(--line);
+  padding: 52px 28px 32px;
+  text-align: center;
+}
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-weight: 400; letter-spacing: 0.22em;
+  color: var(--gold); margin-bottom: 6px;
+}
+.footer-name {
+  font-size: 11px; letter-spacing: 0.2em; color: var(--gray); margin-bottom: 28px;
+}
+.footer-links {
+  display: flex; justify-content: center; gap: 28px; flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.footer-links a { font-size: 11px; letter-spacing: 0.18em; color: var(--gray); transition: color 0.2s; }
+.footer-links a:hover { color: var(--gold); }
+.footer-copy { font-size: 10px; color: rgba(136,136,130,0.5); letter-spacing: 0.12em; }
+
+/* ===== SVG DECO ===== */
+.deco-arrow {
+  position: absolute; pointer-events: none;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 680px) {
+  
+  .ham { display: none; }
+  .concept-inner { grid-template-columns: 1fr; }
+  .concept-img { order: -1; }
+  .stats-inner { grid-template-columns: 1fr; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--line); padding: 40px 24px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .menu-grid { grid-template-columns: 1fr; }
+  .course-grid { grid-template-columns: 1fr; }
+  .space-gallery {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  .space-img:first-child { grid-row: auto; grid-column: 1 / 3; height: 200px; }
+  .space-img { height: 150px; }
+  .access-grid { grid-template-columns: 1fr; }
+  .map-wrap iframe { height: 260px; }
+  .cta-btns { flex-direction: column; align-items: center; }
+}
+
+/* ===== NAV MOBILE MENU ===== */
+.mobile-nav {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(9,9,9,0.98);
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 32px;
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a { font-size: 18px; letter-spacing: 0.2em; color: var(--white); }
+.mobile-nav .close {
+  position: absolute; top: 24px; right: 28px;
+  font-size: 24px; cursor: pointer; color: var(--gold);
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header id="header">
+  <div class="logo">
+    RINSHAN
+    <span>チャイニーズカフェ&バー 嶺上</span>
+  </div>
+  <nav>
+    <a href="#concept">コンセプト</a>
+    <a href="#menu">メニュー</a>
+    <a href="#course">コース</a>
+    <a href="#space">空間</a>
+    <a href="#access">アクセス</a>
+    <a class="nav-reserve" href="https://www.hotpepper.jp/strJ001202884/yoyaku/" target="_blank">ご予約</a>
+  </nav>
+  <div class="ham">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+
+  <!-- SVG deco -->
+  <svg class="deco-arrow" style="top:22%; right:-30px; width:200px; opacity:0.12; transform:rotate(12deg)" viewBox="0 0 120 40" fill="none">
+    <path d="M0 20 L100 20 L78 5 M100 20 L78 35" stroke="#C9A96E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <svg class="deco-arrow" style="top:55%; left:-18px; width:140px; opacity:0.08; transform:rotate(-8deg)" viewBox="0 0 120 40" fill="none">
+    <path d="M0 20 L100 20 L78 5 M100 20 L78 35" stroke="#C9A96E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag" id="heroTag">CHINESE CAFÉ &amp; BAR</div>
+    <h1 class="hero-catch" id="heroCatch">
+      <em>本格中華</em>が、<br>夜に溶ける。
+    </h1>
+    <p class="hero-sub" id="heroSub">
+      熊本の名門ホテルで腕を磨いた料理人が贈る、一皿一杯。<br>
+      銀座通りの夜、リンシャンへ。
+    </p>
+    <div class="hero-cta" id="heroCta">
+      <a class="btn-primary" href="https://www.hotpepper.jp/strJ001202884/yoyaku/" target="_blank">席を予約する</a>
+    </div>
+  </div>
+  <div class="hero-scroll" id="heroScroll">
+    <div class="scroll-line"></div>
+    SCROLL
+  </div>
+</section>
+
+
+
+<!-- ===== CONCEPT ===== -->
+<section class="concept" id="concept">
+  <div class="concept-inner">
+    <div class="concept-text">
+      <div class="concept-num">01</div>
+      <div class="section-label anim fade-left">Concept</div>
+      <h2 class="section-title anim fade-up" data-delay="1">
+        ホテルの技を、<br>街の夜へ。
+      </h2>
+      <p class="concept-body anim fade-up" data-delay="2">
+        熊本を代表するホテルで長年腕を磨いたシェフが、<br>
+        銀座通りに構えた本格中華の一軒。<br><br>
+        リーズナブルな価格でありながら、素材と技に妥協はなし。<br>
+        四川の麻婆豆腐、プリプリのエビチリ、名物担担麺——<br>
+        どの一皿も、記憶に残る本物の味です。
+      </p>
+    </div>
+    <div class="concept-img anim fade-scale" data-delay="1">
+      <img src="img-bar_food.jpg" alt="本格中華">
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHEF FULLBLEED ===== -->
+<section style="position:relative; height: 520px; overflow:hidden; display:flex; align-items:center;">
+  <div style="
+    position:absolute; inset:0;
+    background-image: url('img-chef.png');
+    background-size:cover; background-position:center 30%;
+    filter:brightness(0.35);
+  "></div>
+  <div style="
+    position:absolute; inset:0;
+    background: linear-gradient(to right, rgba(9,9,9,0.85) 0%, transparent 60%);
+  "></div>
+  <div style="position:relative; z-index:2; max-width:960px; margin:0 auto; padding:0 28px;">
+    <div class="section-label anim fade-left" style="margin-bottom:20px;">Chef's Story</div>
+    <h2 class="anim fade-up" data-delay="1" style="
+      font-family:'Noto Serif JP',serif;
+      font-size:clamp(22px,4vw,36px); font-weight:600; line-height:1.6;
+      letter-spacing:0.04em;
+    ">
+      熊本の名門ホテルで磨いた、<br>
+      <span style="color:var(--gold)">火の技と、記憶の一皿。</span>
+    </h2>
+    <p class="anim fade-up" data-delay="2" style="
+      font-size:13px; line-height:2.0; color:rgba(247,242,234,0.7);
+      margin-top:20px; max-width:420px;
+    ">
+      長年にわたり熊本を代表するホテルの厨房で腕を振るったシェフが、<br>
+      銀座通りに本格中華の一軒を構えました。<br>
+      妥協なき素材と技術を、リーズナブルな価格でご提供します。
+    </p>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features">
+  <div class="features-inner">
+    <div class="section-label anim fade-left">Features</div>
+    <h2 class="section-title anim fade-up" data-delay="1">リンシャンの、3つの顔</h2>
+
+    <div class="features-grid">
+      <div class="feature-item anim fade-up" data-delay="0">
+        <div class="feature-img-wrap">
+          <img class="feature-img" src="img-bar_food.jpg" alt="本格中華">
+        </div>
+        <div class="feature-body">
+          <div class="feature-num">01</div>
+          <div class="feature-ttl">本格中華をリーズナブルに</div>
+          <div class="feature-desc">ホテル出身のシェフが作る本格の味を、日常価格で。特別な日も、ふらっと立ち寄る夜も。</div>
+        </div>
+      </div>
+      <div class="feature-item anim fade-up" data-delay="1">
+        <div class="feature-img-wrap">
+          <img class="feature-img" src="img-bar.png" alt="カウンター席">
+        </div>
+        <div class="feature-body">
+          <div class="feature-num">02</div>
+          <div class="feature-ttl">おひとり様も大歓迎</div>
+          <div class="feature-desc">カウンター完備。バー感覚でひとり飲みにも最適。深夜3時まで営業、仕事帰りにもどうぞ。</div>
+        </div>
+      </div>
+      <div class="feature-item anim fade-up" data-delay="2">
+        <div class="feature-img-wrap">
+          <img class="feature-img" src="img-girls.png" alt="女子会">
+        </div>
+        <div class="feature-body">
+          <div class="feature-num">03</div>
+          <div class="feature-ttl">SNS映え女子会・合コンに</div>
+          <div class="feature-desc">スタイリッシュな空間、フォトジェニックなメニュー。女子会・合コン・デートにも。個室もあり。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENU ===== -->
+<section class="menu-section" id="menu">
+  <div class="menu-inner">
+    <div class="menu-head">
+      <div class="section-label anim fade-left">Menu</div>
+      <h2 class="section-title anim fade-up" data-delay="1">シェフの自信作</h2>
+    </div>
+    <div class="menu-grid">
+      <div class="menu-item anim fade-up" data-delay="0">
+        <img class="menu-item-img" src="img-mapo.jpg" alt="リンシャン式 四川麻婆豆腐">
+        <div class="menu-item-body">
+          <div class="menu-item-name">リンシャン式 四川麻婆豆腐</div>
+          <div class="menu-item-desc">山椒のしびれる辛さとトウガラシの刺激。辛さ調整可。シェフ長年の修行の最高傑作。</div>
+          <div class="menu-item-price">¥968<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="1">
+        <img class="menu-item-img" src="img-ebichili.jpg" alt="神のエビチリ">
+        <div class="menu-item-body">
+          <div class="menu-item-name">神のエビチリ</div>
+          <div class="menu-item-desc">プリプリのエビと甘辛ソース。子供から大人まで絶大な人気を誇る定番。</div>
+          <div class="menu-item-price">¥1,078<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="2">
+        <img class="menu-item-img" src="img-tantanmen.jpg" alt="名物リンシャン担担麺">
+        <div class="menu-item-body">
+          <div class="menu-item-name">名物リンシャン担担麺</div>
+          <div class="menu-item-desc">深いコクとスパイシーさがやみつきになるリンシャンを代表する一杯。</div>
+          <div class="menu-item-price">¥968<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="3">
+        <img class="menu-item-img" src="img-ebimayo.jpg" alt="幻のエビマヨ">
+        <div class="menu-item-body">
+          <div class="menu-item-name">幻のエビマヨ</div>
+          <div class="menu-item-desc">濃厚クリーミーなマヨソースとプリ海老の絶妙な組み合わせ。</div>
+          <div class="menu-item-price">¥1,078<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="0">
+        <img class="menu-item-img" src="img-subuta.jpg" alt="濃厚黒酢の酢豚">
+        <div class="menu-item-body">
+          <div class="menu-item-name">濃厚黒酢の酢豚</div>
+          <div class="menu-item-desc">黒酢の深いコクと甘み。ホテル仕込みの本格レシピが光る一品。</div>
+          <div class="menu-item-price">¥1,078<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="1">
+        <img class="menu-item-img" src="img-duck.jpg" alt="鴨のスモークサラダ">
+        <div class="menu-item-body">
+          <div class="menu-item-name">鴨のスモークサラダ</div>
+          <div class="menu-item-desc">香り高いスモーク鴨肉をたっぷり乗せた華やかな一品。</div>
+          <div class="menu-item-price">¥968<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="2">
+        <img class="menu-item-img" src="img-chahan.jpg" alt="カニ炒飯">
+        <div class="menu-item-body">
+          <div class="menu-item-name">カニ炒飯</div>
+          <div class="menu-item-desc">+¥500でハラミステーキ乗せKGチャーハンにアップグレード可。</div>
+          <div class="menu-item-price">¥968<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="3">
+        <img class="menu-item-img" src="img-syurong.jpg" alt="小籠包">
+        <div class="menu-item-body">
+          <div class="menu-item-name">小籠包</div>
+          <div class="menu-item-desc">肉汁たっぷり、皮がもちもちの正統派小籠包。点心の王様。</div>
+          <div class="menu-item-price">¥968<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="0">
+        <img class="menu-item-img" src="img-harumaki.jpg" alt="チーズとろける春巻き">
+        <div class="menu-item-body">
+          <div class="menu-item-name">チーズとろける春巻き</div>
+          <div class="menu-item-desc">チーズがとろとろ溶け出す新感覚の春巻き。SNS映えも抜群。</div>
+          <div class="menu-item-price">¥308<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="1">
+        <img class="menu-item-img" src="img-banbanjee.jpg" alt="バンバンジー">
+        <div class="menu-item-body">
+          <div class="menu-item-name">バンバンジー</div>
+          <div class="menu-item-desc">濃厚ごまだれと柔らか蒸し鶏の定番冷菜。コースの前菜にも人気。</div>
+          <div class="menu-item-price">¥748<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="2">
+        <img class="menu-item-img" src="img-annin.jpg" alt="とろとろ杏仁豆腐">
+        <div class="menu-item-body">
+          <div class="menu-item-name">とろとろ杏仁豆腐</div>
+          <div class="menu-item-desc">なめらかで濃厚。食後の〆スイーツとして女性に大好評。</div>
+          <div class="menu-item-price">¥418<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+      <div class="menu-item anim fade-up" data-delay="3">
+        <img class="menu-item-img" src="img-waffle.jpg" alt="本日のワッフル">
+        <div class="menu-item-body">
+          <div class="menu-item-name">本日のワッフル</div>
+          <div class="menu-item-desc">SNS映えするデザート。女子会のシメに。</div>
+          <div class="menu-item-price">¥858<span style="font-size:11px;color:var(--gray)"> 税込</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="menu-more anim fade-up">
+      <a class="btn-outline" href="https://www.hotpepper.jp/strJ001202884/food/" target="_blank">メニューをすべて見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== COURSE ===== -->
+<section class="course-section" id="course">
+  <div class="course-bg"></div>
+  <div class="course-inner">
+    <div class="section-label anim fade-left">Course</div>
+    <h2 class="section-title anim fade-up" data-delay="1">宴会・女子会コース</h2>
+    <div class="course-grid">
+      <div class="course-card anim fade-up" data-delay="0">
+        <div class="course-card-label">STANDARD COURSE</div>
+        <div class="course-card-title">全7品 120分飲み放題付</div>
+        <div class="course-card-price">5,000<span>円（税込）</span></div>
+        <div class="course-card-desc">女子会・ちょっとした宴会に最適。ご予約はホットペッパーグルメにて。</div>
+      </div>
+      <div class="course-card anim fade-up" data-delay="1">
+        <div class="course-card-label">PREMIUM COURSE</div>
+        <div class="course-card-title">厳選コース 120分飲み放題付</div>
+        <div class="course-card-price">7,000<span>円（税込）</span></div>
+        <div class="course-card-desc">接待・記念日・大切な会食に。厳選素材を使ったシェフこだわりのコース。</div>
+      </div>
+      <div class="course-card anim fade-up" data-delay="2">
+        <div class="course-card-label">PARTY PLAN</div>
+        <div class="course-card-title">12名以上で幹事1名無料</div>
+        <div class="course-card-price" style="font-size:32px">Special<span></span></div>
+        <div class="course-card-desc">20名以上で貸切対応。歓送迎会・忘年会・新年会など各種団体宴会に。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPACE ===== -->
+<section class="space-section" id="space">
+  <div class="space-inner">
+    <div class="section-label anim fade-left">Space</div>
+    <h2 class="section-title anim fade-up" data-delay="1">スタイリッシュな空間</h2>
+    <div class="space-gallery">
+      <div class="space-img anim fade-scale" data-delay="0"><img src="img-hall.jpg" alt="店内全体"></div>
+      <div class="space-img anim fade-up" data-delay="1"><img src="img-private.jpg" alt="個室"></div>
+      <div class="space-img anim fade-up" data-delay="2"><img src="img-private2.jpg" alt="個室2人"></div>
+      <div class="space-img anim fade-up" data-delay="3"><img src="img-table4.jpg" alt="テーブル席"></div>
+      <div class="space-img anim fade-up" data-delay="4"><img src="img-counter.jpg" alt="カウンター席"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ACCESS ===== -->
+<section class="access-section" id="access">
+  <div class="access-inner">
+    <div class="section-label anim fade-left">Access</div>
+    <h2 class="section-title anim fade-up" data-delay="1">店舗情報</h2>
+    <div class="access-grid">
+      <div class="anim fade-up" data-delay="1">
+        <table class="info-table">
+          <tr>
+            <td>店名</td>
+            <td>チャイニーズカフェ&バー リンシャン 嶺上</td>
+          </tr>
+          <tr>
+            <td>住所</td>
+            <td>熊本県熊本市中央区花畑町12-5<br>Amaizig8ビル1F</td>
+          </tr>
+          <tr>
+            <td>アクセス</td>
+            <td>銀座通り沿い、吉野家近く<br>花畑町駅・辛島町駅 徒歩すぐ</td>
+          </tr>
+          <tr>
+            <td>営業時間</td>
+            <td>18:00 〜 翌3:00<br><span style="font-size:11px;color:var(--gray)">料理・ドリンクL.O. 翌2:30</span></td>
+          </tr>
+          <tr>
+            <td>定休日</td>
+            <td>不定休</td>
+          </tr>
+          <tr>
+            <td>予算</td>
+            <td>¥3,000〜4,000 / 1名</td>
+          </tr>
+          <tr>
+            <td>座席</td>
+            <td>総60席 / 個室（8〜12名）/ カウンター / 貸切（20名〜）</td>
+          </tr>
+          <tr>
+            <td>お支払い</td>
+            <td>クレジットカード（VISA/Master/AMEX/JCB等）<br>iD / PayPay</td>
+          </tr>
+          <tr>
+            <td>喫煙</td>
+            <td>全席喫煙可</td>
+          </tr>
+          <tr>
+            <td>年齢制限</td>
+            <td>20歳未満の方は入店不可</td>
+          </tr>
+        </table>
+      </div>
+      <div style="margin-bottom:12px;overflow:hidden;"><img src="img-exterior.jpg" alt="外観" style="width:100%;height:180px;object-fit:cover;"></div>
+      <div class="map-wrap anim fade-scale" data-delay="2">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d831.3!2d130.7082!3d32.7894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3540f47d7e90e97f%3A0x71fc573a6e7d4b1!2z44OB44Oj44Kk44OL44O844K644Kr44OV44Kp44O644OQ44O8IOODquODs-OCt+ODo-ODs!5e0!3m2!1sja!2sjp!4v1683000000000"
+          allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-inner">
+    <div class="cta-en anim fade-up">RESERVATION</div>
+    <h2 class="cta-title anim fade-up" data-delay="1">
+      今夜、リンシャンへ。
+    </h2>
+    <div class="cta-btns anim fade-up" data-delay="2">
+      <a class="btn-primary" href="https://www.hotpepper.jp/strJ001202884/yoyaku/" target="_blank">ネット予約する（ホットペッパー）</a>
+      <a class="btn-outline" href="tel:0963220098">電話で問い合わせる</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">RINSHAN</div>
+  <div class="footer-name">チャイニーズカフェ&バー 嶺上</div>
+  <div class="footer-links">
+    <a href="#concept">コンセプト</a>
+    <a href="#menu">メニュー</a>
+    <a href="#course">コース</a>
+    <a href="#space">空間</a>
+    <a href="#access">アクセス</a>
+    <a href="https://www.hotpepper.jp/strJ001202884/yoyaku/" target="_blank">ご予約</a>
+  </div>
+  <div class="footer-copy">熊本県熊本市中央区花畑町12-5 Amaizig8ビル1F &nbsp;|&nbsp; 18:00–翌3:00</div>
+</footer>
+
+<script>
+// ===== SCROLL SPY =====
+const sections = ['concept','menu','course','space','access'];
+const navLinks = {};
+sections.forEach(id => {
+  const el = document.querySelector(`nav a[href="#${id}"]`);
+  if (el) navLinks[id] = el;
+});
+
+function updateActiveNav() {
+  const scrollY = window.scrollY + window.innerHeight * 0.35;
+  let current = '';
+  sections.forEach(id => {
+    const sec = document.getElementById(id);
+    if (sec && sec.offsetTop <= scrollY) current = id;
+  });
+  Object.entries(navLinks).forEach(([id, el]) => {
+    el.classList.toggle('active', id === current);
+  });
+}
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+updateActiveNav();
+window.addEventListener('scroll', () => {
+  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ===== HERO LOAD ANIM =====
+window.addEventListener('load', () => {
+  document.getElementById('heroBg').classList.add('loaded');
+  setTimeout(() => document.getElementById('heroTag').classList.add('show'), 400);
+  setTimeout(() => document.getElementById('heroCatch').classList.add('show'), 700);
+  setTimeout(() => document.getElementById('heroSub').classList.add('show'), 1100);
+  setTimeout(() => document.getElementById('heroCta').classList.add('show'), 1400);
+  setTimeout(() => document.getElementById('heroScroll').classList.add('show'), 1800);
+});
+
+// ===== SCROLL ANIM =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const delay = parseInt(el.dataset.delay || 0) * 130 + 60;
+    setTimeout(() => el.classList.add('visible'), delay);
+    observer.unobserve(el);
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.anim').forEach(el => observer.observe(el));
+
+
+
+// ===== MOBILE NAV =====
+</script>
+</body>
+</html>
